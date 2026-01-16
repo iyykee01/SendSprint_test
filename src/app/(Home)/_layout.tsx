@@ -1,3 +1,4 @@
+import { TransactionProvider } from "@/src/contexts/transactionContext";
 import { Stack } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
 
@@ -11,22 +12,24 @@ const MyCustomHeaderTitle = (props: { title: string }) => {
 
 export const HomeLayout = () => {
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: "#0052FF", // Your brand color
-        },
-      }}
-    >
-      <Stack.Screen
-        name="index"
-        options={{
-          headerTitle: (props) => (
-            <MyCustomHeaderTitle {...props} title="SendSprint" />
-          ),
+    <TransactionProvider>
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#0052FF",
+          },
         }}
-      />
-    </Stack>
+      >
+        <Stack.Screen
+          name="index"
+          options={{
+            headerTitle: (props) => (
+              <MyCustomHeaderTitle {...props} title="SendSprint" />
+            ),
+          }}
+        />
+      </Stack>
+    </TransactionProvider>
   );
 };
 
@@ -34,7 +37,6 @@ const styles = StyleSheet.create({
   customTitleContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#0052FF",
   },
   titleText: {
     color: "#FFF",

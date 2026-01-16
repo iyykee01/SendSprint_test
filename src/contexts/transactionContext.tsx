@@ -1,28 +1,36 @@
-import React, { createContext, useContext, ReactNode } from "react";
+import React, { createContext, ReactNode } from "react";
+import { Transaction } from "@/src/types/transaction.type";
+import { useTransaction } from "@/src/hooks/transaction/useTransaction";
+import { NetworkState } from "@/src/types/network.types";
 
-import {
-  TransactionContextProps,
-  useTransactionHook,
-} from "@/src/hooks/transaction/transactionHook";
+// Define props for TransactionProvider
+interface TransactionProviderProps {
+  children: ReactNode;
+}
 
-const TransactionContext = createContext<TransactionContextProps | undefined>(
-  undefined
-);
+interface TransactionContextProps extends NetworkState {
+  transactions: Transaction[];
+  fetchTransactions: () => void;
+}
 
-export const TransactionProvider = ({ children }: { children: ReactNode }) => {
-  const { transactionState } = useTransactionHook();
+// Create TransactionContext
+export const TransactionContext = createContext<
+  TransactionContextProps | undefined
+>(undefined);
+
+export const TransactionProvider = ({ children }: TransactionProviderProps) => {
+  const { fetchTransactions, transactions, loading, error } = useTransaction();
+
+  const value = {
+    transactions,
+    loading,
+    error,
+    fetchTransactions,
+  };
 
   return (
-    <TransactionContext.Provider value={transactionState}>
+    <TransactionContext.Provider value={value}>
       {children}
     </TransactionContext.Provider>
   );
-};
-
-export const useTransactions = () => {
-  const context = useContext(TransactionContext);
-
-  if (!context)
-    throw new Error("useTransactions must be used within TransactionProvider");
-  return context;
 };
