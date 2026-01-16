@@ -1,8 +1,8 @@
 import { Alert } from "react-native";
-import { useTransactionHook } from "@/src/hooks/transaction/transactionHook";
+import { useTransaction } from "@/src/hooks/transaction/useTransaction";
 
-export const useAlertHook = () => {
-  const { fetchTransactions } = useTransactionHook();
+export const useAlert = () => {
+  const { fetchTransactions } = useTransaction();
 
   const customModal = () =>
     Alert.alert("ERROR!!!", "Error loading transactions. Please try again.", [

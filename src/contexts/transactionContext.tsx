@@ -1,28 +1,26 @@
-import React, { createContext, useContext, ReactNode } from "react";
+import React, { createContext, ReactNode } from "react";
 
 import {
   TransactionContextProps,
-  useTransactionHook,
-} from "@/src/hooks/transaction/transactionHook";
+  useTransaction,
+} from "@/src/hooks/transaction/useTransaction";
 
-const TransactionContext = createContext<TransactionContextProps | undefined>(
-  undefined
-);
+// Define props for TransactionProvider
+interface TransactionProviderProps {
+  children: ReactNode;
+}
 
-export const TransactionProvider = ({ children }: { children: ReactNode }) => {
-  const { transactionState } = useTransactionHook();
+// Create TransactionContext
+export const TransactionContext = createContext<
+  TransactionContextProps | undefined
+>(undefined);
+
+export const TransactionProvider = ({ children }: TransactionProviderProps) => {
+  const { transactionState } = useTransaction();
 
   return (
     <TransactionContext.Provider value={transactionState}>
       {children}
     </TransactionContext.Provider>
   );
-};
-
-export const useTransactions = () => {
-  const context = useContext(TransactionContext);
-
-  if (!context)
-    throw new Error("useTransactions must be used within TransactionProvider");
-  return context;
 };

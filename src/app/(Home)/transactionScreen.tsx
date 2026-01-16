@@ -1,18 +1,31 @@
 import { TransactionItem } from "@/src/components/ui/transactionItem";
 import { FlatListScroller } from "@/src/components/ui/flatListScroller";
-import { useTransactions } from "@/src/contexts/transactionContext";
 import { View, Text, StyleSheet } from "react-native";
-import { Loader } from "@/src/components/loader";
-import { useAlertHook } from "@/src/hooks/alertHook/alertHook";
+import { Loader } from "@/src/components/ui/loader";
+import { useAlert } from "@/src/hooks/useAlert/useAlert";
+import { useContext } from "react";
+import { TransactionContext } from "@/src/contexts/transactionContext";
 
 const TransactionScreen = () => {
-  const { transactions, loading, error } = useTransactions();
-  const { customModal } = useAlertHook();
+  // Access transaction context
+  const context = useContext(TransactionContext);
 
+  // Ensure context is available
+  if (!context)
+    throw new Error("useTransactions must be used within TransactionProvider");
+
+  // Destructure context values
+  const { transactions, loading, error } = context;
+
+  // Access custom alert hook
+  const { customModal } = useAlert();
+
+  // Handle loading and error states
   if (loading) {
     return <Loader />;
   }
 
+  // Show error modal if there's an error
   if (error) {
     customModal();
   }

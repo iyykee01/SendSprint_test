@@ -1,11 +1,15 @@
 import React from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
-export const Loader = () => {
+interface LoaderProps {
+  loadingText?: string | "Loading Transactions...";
+}
+
+export const Loader = ({ loadingText }: LoaderProps) => {
   return (
     <View style={styles.center}>
       <ActivityIndicator size="large" color="#0052FF" />
-      <Text style={styles.loadingText}>Loading Transactions...</Text>
+      <Text style={styles.loadingText}>{loadingText}</Text>
     </View>
   );
 };

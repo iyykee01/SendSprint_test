@@ -36,11 +36,13 @@ const MOCK_DATA: Transaction[] = [
   },
 ];
 
+// Define the shape of the transaction context state
 export interface TransactionContextProps extends NetworkState {
   transactions: Transaction[];
 }
 
-export const useTransactionHook = () => {
+export const useTransaction = () => {
+  // State to hold transactions and network status
   const [transactionState, setTransactionState] =
     useState<TransactionContextProps>({
       transactions: [],
@@ -48,10 +50,12 @@ export const useTransactionHook = () => {
       error: null,
     });
 
+  // Fetch transactions on hook page load
   useEffect(() => {
     fetchTransactions();
   }, []);
 
+  // Method to fetch transactions from the API
   const fetchTransactions = async () => {
     try {
       const response = await fetchData(`${app_url}${get_transaction_path}`);

@@ -14,7 +14,7 @@ export const HomeLayout = () => {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#0052FF", // Your brand color
+          backgroundColor: "#0052FF",
         },
       }}
     >
@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
   customTitleContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#0052FF",
   },
   titleText: {
     color: "#FFF",
