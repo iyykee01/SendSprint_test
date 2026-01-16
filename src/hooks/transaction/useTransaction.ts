@@ -1,9 +1,8 @@
 import { app_url } from "@/src/constant/appUrl";
 import { get_transaction_path } from "@/src/constant/transactionPaths";
 import { fetchData } from "@/src/requestAPI/requestApi";
-import { NetworkState } from "@/src/types/network.types";
 import { Transaction } from "@/src/types/transaction.type";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // Mock Data
 const MOCK_DATA: Transaction[] = [
@@ -36,42 +35,26 @@ const MOCK_DATA: Transaction[] = [
   },
 ];
 
-// Define the shape of the transaction context state
-export interface TransactionContextProps extends NetworkState {
-  transactions: Transaction[];
-}
-
 export const useTransaction = () => {
-  // State to hold transactions and network status
-  const [transactionState, setTransactionState] =
-    useState<TransactionContextProps>({
-      transactions: [],
-      loading: true,
-      error: null,
-    });
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch transactions on hook page load
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
-
-  // Method to fetch transactions from the API
   const fetchTransactions = async () => {
+    // setTransactions(MOCK_DATA);
+    setLoading(true);
+
     try {
-      const response = await fetchData(`${app_url}${get_transaction_path}`);
-      setTransactionState({
-        transactions: response || MOCK_DATA,
-        loading: false,
-        error: null,
-      });
+      //using a 2minute delay to simulate network request
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+
+      const data = await fetchData(`${app_url}${get_transaction_path}`);
+      setTransactions(data);
     } catch (err) {
-      setTransactionState({
-        transactions: [],
-        loading: false,
-        error: err instanceof Error ? err.message : "Failed to fetch data",
-      });
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setLoading(false);
     }
   };
-
-  return { transactionState, fetchTransactions };
+  return { transactions, loading, error, fetchTransactions };
 };

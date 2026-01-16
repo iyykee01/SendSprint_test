@@ -2,8 +2,8 @@ import { TransactionItem } from "@/src/components/ui/transactionItem";
 import { FlatListScroller } from "@/src/components/ui/flatListScroller";
 import { View, Text, StyleSheet } from "react-native";
 import { Loader } from "@/src/components/ui/loader";
-import { useAlert } from "@/src/hooks/useAlert/useAlert";
-import { useContext } from "react";
+import { ErrorModal } from "@/src/components/errorModal/errorModal";
+import { useContext, useEffect } from "react";
 import { TransactionContext } from "@/src/contexts/transactionContext";
 
 const TransactionScreen = () => {
@@ -15,19 +15,23 @@ const TransactionScreen = () => {
     throw new Error("useTransactions must be used within TransactionProvider");
 
   // Destructure context values
-  const { transactions, loading, error } = context;
+  const { transactions, loading, error, fetchTransactions } = context;
 
-  // Access custom alert hook
-  const { customModal } = useAlert();
+  // Fetch transactions on component mount
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
 
   // Handle loading and error states
   if (loading) {
     return <Loader />;
   }
 
-  // Show error modal if there's an error
+  // Show error modal if there's an error and return early
   if (error) {
-    customModal();
+    return (
+      <ErrorModal title="Error" bodyText={error} onPress={fetchTransactions} />
+    );
   }
 
   return (
